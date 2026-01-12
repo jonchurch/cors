@@ -42,14 +42,15 @@ var express = require('express')
 var cors = require('cors')
 var app = express()
 
+// Adds CORS headers: Access-Control-Allow-Origin: *
 app.use(cors())
 
 app.get('/products/:id', function (req, res, next) {
-  res.json({msg: 'This is CORS-enabled for all origins!'})
+  res.json({msg: 'Hello'})
 })
 
 app.listen(80, function () {
-  console.log('CORS-enabled web server listening on port 80')
+  console.log('web server listening on port 80')
 })
 ```
 
@@ -60,12 +61,13 @@ var express = require('express')
 var cors = require('cors')
 var app = express()
 
+// Adds CORS headers: Access-Control-Allow-Origin: *
 app.get('/products/:id', cors(), function (req, res, next) {
-  res.json({msg: 'This is CORS-enabled for a Single Route'})
+  res.json({msg: 'Hello'})
 })
 
 app.listen(80, function () {
-  console.log('CORS-enabled web server listening on port 80')
+  console.log('web server listening on port 80')
 })
 ```
 
@@ -83,12 +85,13 @@ var corsOptions = {
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
+// Adds CORS headers: Access-Control-Allow-Origin: http://example.com
 app.get('/products/:id', cors(corsOptions), function (req, res, next) {
-  res.json({msg: 'This is CORS-enabled for only example.com.'})
+  res.json({msg: 'Hello'})
 })
 
 app.listen(80, function () {
-  console.log('CORS-enabled web server listening on port 80')
+  console.log('web server listening on port 80')
 })
 ```
 
@@ -113,12 +116,13 @@ var corsOptions = {
   }
 }
 
+// Adds CORS headers: Access-Control-Allow-Origin: <matched origin>
 app.get('/products/:id', cors(corsOptions), function (req, res, next) {
-  res.json({msg: 'This is CORS-enabled for an allowed domain.'})
+  res.json({msg: 'Hello'})
 })
 
 app.listen(80, function () {
-  console.log('CORS-enabled web server listening on port 80')
+  console.log('web server listening on port 80')
 })
 ```
 
@@ -135,13 +139,13 @@ var express = require('express')
 var cors = require('cors')
 var app = express()
 
-app.options('/products/:id', cors()) // enable pre-flight request for DELETE request
+app.options('/products/:id', cors()) // preflight for DELETE
 app.del('/products/:id', cors(), function (req, res, next) {
-  res.json({msg: 'This is CORS-enabled for all origins!'})
+  res.json({msg: 'Hello'})
 })
 
 app.listen(80, function () {
-  console.log('CORS-enabled web server listening on port 80')
+  console.log('web server listening on port 80')
 })
 ```
 
@@ -159,12 +163,14 @@ To vary CORS settings per request, pass a function instead of an options object.
 var dynamicCorsOptions = function(req, callback) {
   var corsOptions;
   if (req.path.startsWith('/auth/connect/')) {
+    // Access-Control-Allow-Origin: http://mydomain.com
     corsOptions = {
-      origin: 'http://mydomain.com', // Allow only a specific origin
-      credentials: true,            // Enable cookies and credentials
+      origin: 'http://mydomain.com',
+      credentials: true
     };
   } else {
-    corsOptions = { origin: '*' };   // Allow all origins for other routes
+    // Access-Control-Allow-Origin: *
+    corsOptions = { origin: '*' };
   }
   callback(null, corsOptions);
 };
@@ -172,15 +178,15 @@ var dynamicCorsOptions = function(req, callback) {
 app.use(cors(dynamicCorsOptions));
 
 app.get('/auth/connect/twitter', function (req, res) {
-  res.send('CORS dynamically applied for Twitter authentication.');
+  res.send('Hello');
 });
 
 app.get('/public', function (req, res) {
-  res.send('Public data with open CORS.');
+  res.send('Hello');
 });
 
 app.listen(80, function () {
-  console.log('CORS-enabled web server listening on port 80')
+  console.log('web server listening on port 80')
 })
 ```
 
